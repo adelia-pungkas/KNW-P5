@@ -1,0 +1,67 @@
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname ="punyaPungkas";
+
+$conn = new mysqli($servername, $username, $password , $dbname);
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      print_r($_POST);
+
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $gender = $_POST['gender'];
+    $tgl = $_POST ['dob'];
+
+    $sql = "INSERT INTO data (nama, email, gender, tanggalLahir)
+    VALUES ('$name', '$email', '$gender', '$tgl')";
+
+    if ($conn->query($sql) === TRUE) {
+    echo "Data berhasil disimpan ke database!";
+    } else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+
+
+    if (!empty($tgl)) {
+        $birthdate = new DateTime($tgl);
+        $today = new DateTime();
+        $age = $today->diff($birthdate)->y;
+    } else {
+        $age = 'Tanggal lahir tidak valid';
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konfirmasi Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Konfirmasi Data Anda</h2>
+    <ul class="list-group">
+        <li class="list-group-item">Nama: <?php echo htmlspecialchars($name); ?></li>
+        <li class="list-group-item">Email: <?php echo htmlspecialchars($email); ?></li>
+        <li class="list-group-item">Gender: <?php echo htmlspecialchars($gender); ?></li>
+        <li class="list-group-item">Tanggal Lahir: <?php echo date("d F Y", strtotime($dob)); ?></li>
+        <li class="list-group-item">Umur: <?php echo $age; ?> tahun</li>
+    </ul>
+
+    <div class="text-center mt-4">
+        <a href="Untitled-2.html" class="btn btn-success">back </a>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
